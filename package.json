@@ -22,8 +22,8 @@
     "stylus-brunch": "1.0.x || 1.1.x",
 
     "dustjs-brunch": "git://github.com/sandosh/dustjs-brunch.git",
-    "uglify-js-brunch": "1.0.x || 1.1.x",
-    "clean-css-brunch": "1.0.x || 1.1.x"
+    "clean-css-brunch": "1.0.x || 1.1.x",
+    "uglify-js-brunch": "1.0.x || 1.1.x"
   },
   "devDependencies": {
     "mocha": "0.14.0",

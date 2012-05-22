@@ -1,1 +1,295 @@
-((function(){"use strict";if(!this.require){var a={},b={},c={}.hasOwnProperty,d=function(a,b){var c=[],d,e;/^\.\.?(\/|$)/.test(b)?d=[a,b].join("/").split("/"):d=b.split("/");for(var f=0,g=d.length;f<g;f++)e=d[f],e==".."?c.pop():e!="."&&e!=""&&c.push(e);return c.join("/")},e=function(e,f){var g=f?b:a,h;if(c.call(g,e))return e;h=d(e,"./index");if(c.call(g,h))return h},f=function(a,c,d){var e={id:c,exports:{}};try{b[c]=e.exports,d(e.exports,function(a){return g(a,h(c))},e),b[c]=e.exports}catch(f){throw delete b[c],f}return b[c]},g=function(c,g){var h=d(g,c),i;if(i=e(h,!0))return b[i];if(i=e(h,!1))return f(c,i,a[i]);throw new Error("Cannot find module '"+c+"'")},h=function(a){return a.split("/").slice(0,-1).join("/")};this.require=function(a){return g(a,"")},this.require.brunch=!0,this.require.define=function(b){for(var d in b)c.call(b,d)&&(a[d]=b[d])}}})).call(this),this.require.define({application:function(a,b,c){((function(){var a;a={initialize:function(){var a,c;return a=b("views/home_view"),c=b("lib/router"),this.homeView=new a,this.router=new c,typeof Object.freeze=="function"?Object.freeze(this):void 0}},c.exports=a})).call(this)}}),this.require.define({initialize:function(a,b,c){((function(){var a;a=b("application"),$(function(){return a.initialize(),Backbone.history.start()})})).call(this)}}),this.require.define({"lib/router":function(a,b,c){((function(){var a,d,e=Object.prototype.hasOwnProperty,f=function(a,b){function d(){this.constructor=a}for(var c in b)e.call(b,c)&&(a[c]=b[c]);return d.prototype=b.prototype,a.prototype=new d,a.__super__=b.prototype,a};d=b("application"),c.exports=a=function(a){function b(){b.__super__.constructor.apply(this,arguments)}return f(b,a),b.prototype.routes={"":"home"},b.prototype.home=function(){return $("body").html(d.homeView.render().el)},b}(Backbone.Router)})).call(this)}}),this.require.define({"lib/view_helper":function(a,b,c){((function(){})).call(this)}}),this.require.define({"models/collection":function(a,b,c){((function(){var a,b=Object.prototype.hasOwnProperty,d=function(a,c){function e(){this.constructor=a}for(var d in c)b.call(c,d)&&(a[d]=c[d]);return e.prototype=c.prototype,a.prototype=new e,a.__super__=c.prototype,a};c.exports=a=function(a){function b(){b.__super__.constructor.apply(this,arguments)}return d(b,a),b}(Backbone.Collection)})).call(this)}}),this.require.define({"models/model":function(a,b,c){((function(){var a,b=Object.prototype.hasOwnProperty,d=function(a,c){function e(){this.constructor=a}for(var d in c)b.call(c,d)&&(a[d]=c[d]);return e.prototype=c.prototype,a.prototype=new e,a.__super__=c.prototype,a};c.exports=a=function(a){function b(){b.__super__.constructor.apply(this,arguments)}return d(b,a),b}(Backbone.Model)})).call(this)}}),this.require.define({"views/home_view":function(a,b,c){((function(){var a,d,e,f=Object.prototype.hasOwnProperty,g=function(a,b){function d(){this.constructor=a}for(var c in b)f.call(b,c)&&(a[c]=b[c]);return d.prototype=b.prototype,a.prototype=new d,a.__super__=b.prototype,a};d=b("./view"),e=b("./templates/home"),c.exports=a=function(a){function b(){b.__super__.constructor.apply(this,arguments)}return g(b,a),b.prototype.id="home-view",b.prototype.template=e,b}(d)})).call(this)}}),this.require.define({"views/templates/home":function(a,b,c){c.exports='(function(){dust.register("home",body_0);function body_0(chk,ctx){return chk.write("<div id=\\"content\\"><h1>brunch</h1><h2>Welcome!</h2><ul><li><a href=\\"http://brunch.readthedocs.org/\\">Documentation</a></li><li><a href=\\"https://github.com/brunch/brunch/issues\\">Github Issues</a></li><li><a href=\\"https://github.com/brunch/twitter\\">Twitter Example App</a></li><li><a href=\\"https://github.com/brunch/todos\\">Todos Example App</a></li></ul></div>");}return body_0;})();'}}),this.require.define({"views/view":function(a,b,c){((function(){var a,d=function(a,b){return function(){return a.apply(b,arguments)}},e=Object.prototype.hasOwnProperty,f=function(a,b){function d(){this.constructor=a}for(var c in b)e.call(b,c)&&(a[c]=b[c]);return d.prototype=b.prototype,a.prototype=new d,a.__super__=b.prototype,a};b("lib/view_helper"),c.exports=a=function(a){function b(){this.render=d(this.render,this),b.__super__.constructor.apply(this,arguments)}return f(b,a),b.prototype.template=function(){},b.prototype.getRenderData=function(){},b.prototype.render=function(){return this.$el.html(this.template(this.getRenderData())),this.afterRender(),this},b.prototype.afterRender=function(){},b}(Backbone.View)})).call(this)}})
+(function(/*! Brunch !*/) {
+  'use strict';
+
+  if (!this.require) {
+    var modules = {};
+    var cache = {};
+    var __hasProp = ({}).hasOwnProperty;
+
+    var expand = function(root, name) {
+      var results = [], parts, part;
+      if (/^\.\.?(\/|$)/.test(name)) {
+        parts = [root, name].join('/').split('/');
+      } else {
+        parts = name.split('/');
+      }
+      for (var i = 0, length = parts.length; i < length; i++) {
+        part = parts[i];
+        if (part == '..') {
+          results.pop();
+        } else if (part != '.' && part != '') {
+          results.push(part);
+        }
+      }
+      return results.join('/');
+    };
+
+    var getFullPath = function(path, fromCache) {
+      var store = fromCache ? cache : modules;
+      var dirIndex;
+      if (__hasProp.call(store, path)) return path;
+      dirIndex = expand(path, './index');
+      if (__hasProp.call(store, dirIndex)) return dirIndex;
+    };
+    
+    var cacheModule = function(name, path, contentFn) {
+      var module = {id: path, exports: {}};
+      try {
+        cache[path] = module.exports;
+        contentFn(module.exports, function(name) {
+          return require(name, dirname(path));
+        }, module);
+        cache[path] = module.exports;
+      } catch (err) {
+        delete cache[path];
+        throw err;
+      }
+      return cache[path];
+    };
+
+    var require = function(name, root) {
+      var path = expand(root, name);
+      var fullPath;
+
+      if (fullPath = getFullPath(path, true)) {
+        return cache[fullPath];
+      } else if (fullPath = getFullPath(path, false)) {
+        return cacheModule(name, fullPath, modules[fullPath]);
+      } else {
+        throw new Error("Cannot find module '" + name + "'");
+      }
+    };
+
+    var dirname = function(path) {
+      return path.split('/').slice(0, -1).join('/');
+    };
+
+    this.require = function(name) {
+      return require(name, '');
+    };
+
+    this.require.brunch = true;
+    this.require.define = function(bundle) {
+      for (var key in bundle) {
+        if (__hasProp.call(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    };
+  }
+}).call(this);
+(this.require.define({
+  "application": function(exports, require, module) {
+    (function() {
+  var Application;
+
+  Application = {
+    initialize: function() {
+      var HomeView, Router;
+      HomeView = require('views/home_view');
+      Router = require('lib/router');
+      this.homeView = new HomeView();
+      this.router = new Router();
+      return typeof Object.freeze === "function" ? Object.freeze(this) : void 0;
+    }
+  };
+
+  module.exports = Application;
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "initialize": function(exports, require, module) {
+    (function() {
+  var application;
+
+  application = require('application');
+
+  $(function() {
+    application.initialize();
+    return Backbone.history.start();
+  });
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "lib/router": function(exports, require, module) {
+    (function() {
+  var Router, application,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  application = require('application');
+
+  module.exports = Router = (function(_super) {
+
+    __extends(Router, _super);
+
+    function Router() {
+      Router.__super__.constructor.apply(this, arguments);
+    }
+
+    Router.prototype.routes = {
+      '': 'home'
+    };
+
+    Router.prototype.home = function() {
+      return $('body').html(application.homeView.render().el);
+    };
+
+    return Router;
+
+  })(Backbone.Router);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "lib/view_helper": function(exports, require, module) {
+    (function() {
+
+
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "models/collection": function(exports, require, module) {
+    (function() {
+  var Collection,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  module.exports = Collection = (function(_super) {
+
+    __extends(Collection, _super);
+
+    function Collection() {
+      Collection.__super__.constructor.apply(this, arguments);
+    }
+
+    return Collection;
+
+  })(Backbone.Collection);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "models/model": function(exports, require, module) {
+    (function() {
+  var Model,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  module.exports = Model = (function(_super) {
+
+    __extends(Model, _super);
+
+    function Model() {
+      Model.__super__.constructor.apply(this, arguments);
+    }
+
+    return Model;
+
+  })(Backbone.Model);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/home_view": function(exports, require, module) {
+    (function() {
+  var HomeView, View, template,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  View = require('./view');
+
+  template = require('./templates/home');
+
+  module.exports = HomeView = (function(_super) {
+
+    __extends(HomeView, _super);
+
+    function HomeView() {
+      this.render = __bind(this.render, this);
+      HomeView.__super__.constructor.apply(this, arguments);
+    }
+
+    HomeView.prototype.id = 'home-view';
+
+    HomeView.prototype.template = template;
+
+    HomeView.prototype.render = function() {
+      var self;
+      self = this;
+      dust.loadSource(template);
+      dust.render("home", {}, function(err, output) {
+        return self.$el.html(output);
+      });
+      this.afterRender();
+      return self;
+    };
+
+    return HomeView;
+
+  })(View);
+
+}).call(this);
+
+  }
+}));
+(this.require.define({
+  "views/templates/home": function(exports, require, module) {
+    module.exports =  "(function(){dust.register(\"home\",body_0);function body_0(chk,ctx){return chk.write(\"<div id=\\\"content\\\"><h1>brunch</h1><h2>Welcome!</h2><ul><li><a href=\\\"http://brunch.readthedocs.org/\\\">Documentation</a></li><li><a href=\\\"https://github.com/brunch/brunch/issues\\\">Github Issues</a></li><li><a href=\\\"https://github.com/brunch/twitter\\\">Twitter Example App</a></li><li><a href=\\\"https://github.com/brunch/todos\\\">Todos Example App</a></li></ul></div>\");}return body_0;})();";
+  }
+}));
+(this.require.define({
+  "views/view": function(exports, require, module) {
+    (function() {
+  var View,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  require('lib/view_helper');
+
+  module.exports = View = (function(_super) {
+
+    __extends(View, _super);
+
+    function View() {
+      this.render = __bind(this.render, this);
+      View.__super__.constructor.apply(this, arguments);
+    }
+
+    View.prototype.template = function() {};
+
+    View.prototype.getRenderData = function() {};
+
+    View.prototype.render = function() {
+      this.$el.html(this.template(this.getRenderData()));
+      this.afterRender();
+      return this;
+    };
+
+    View.prototype.afterRender = function() {};
+
+    return View;
+
+  })(Backbone.View);
+
+}).call(this);
+
+  }
+}));
