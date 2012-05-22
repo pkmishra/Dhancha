@@ -7,7 +7,7 @@ Make sure to have Brunch.io installed.
 
 Create your project using following command
 
-    brunch new <your-project-name> -s git://github.com/pkmishra/dhancha.git
+    brunch new <your-project-name> -s git@github.com:pkmishra/Dhancha.git
     
 Or you may also copy the complete directory.
 
