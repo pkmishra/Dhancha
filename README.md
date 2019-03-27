@@ -1,4 +1,4 @@
-# Dhanca
+# Dhancha
 
 This is a Dhancha [Hindi Language], which means skeleton, of a project utilizing brunch.io with twitter bootstrap. You may add your own library like backbone-aura if required. In case you are not aware of brunch.io tool, I would highly recommend to first visit site http://brunch.io and later on use this skelton to create your project.
 
